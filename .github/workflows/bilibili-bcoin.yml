@@ -2,7 +2,7 @@ name: Bilibili B-coin Coupon and Charge
 
 on:
   schedule:
-    - cron: "20 10 1 * *"
+    - cron: "20 10 2 * *"
       timezone: "Asia/Shanghai"
   workflow_dispatch:
 
