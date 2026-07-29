@@ -1,0 +1,39 @@
+name: Bilibili B-coin Coupon and Charge
+
+on:
+  schedule:
+    - cron: "20 10 1 * *"
+      timezone: "Asia/Shanghai"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run-bilibili-task:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Bilibili task
+        working-directory: bilibili-bcoin-scf-lite
+        env:
+          BILI_COOKIE: ${{ secrets.BILI_COOKIE }}
+          TARGET_UP_ID: "98399918"
+          RUN_TASKS: "VipPrivilege&Charge"
+          CHARGE_COMMENT: "支持"
+          PYTHONUNBUFFERED: "1"
+        run: |
+          test -n "$BILI_COOKIE" || {
+            echo "::error::Missing repository secret: BILI_COOKIE"
+            exit 1
+          }
+          python3 index.py
